@@ -11,10 +11,10 @@ data = data[["Age", "Social drinker", "Social smoker", "Weight", "Height", "Body
 data = data.to_numpy()
 
 
-rows = 705
+rows = 189
 cols = 7
 K = 5
-TT = 351 #TT is the Training threshhold which is the initial number of Instances to be loaded into the Training set
+TT = 50 #TT is the Training threshhold which is the initial number of Instances to be loaded into the Training set
 def normalize_features(input):
 
     normalizedList = []
@@ -82,12 +82,12 @@ def main():
     A = np.array(output)
     A = np.squeeze(A)
     D = A[:, :TT]
-    X = A[:6, TT + 1:704]
-    YC = A[6:, TT + 1:704]
+    X = A[:6, TT + 1:rows]
+    YC = A[6:, TT + 1:rows]
     distPairings = []
     np.array(distPairings)
     y_col = []
-    for i in range(352): # maybe use rows and coloumns
+    for i in range(rows - TT - 1): # maybe use rows and coloumns
         for j in range(TT):
             ED = euclideanDistance(X[:, i], D[:, j])
             distPairings.append([ED, D[:, j][6]]) # fill list with tuples of form [Distance, D(Y)]
@@ -95,16 +95,15 @@ def main():
         #distPairings.sort(axis=0) # Sorts based of first value of each tuple (distances in ascending order)
         #cut distPAirings to length K
         distPairings = np.array(distPairings)
-        print (np.shape(distPairings))
-        print(distPairings)
+        print("Pre-sort", distPairings)
         distPairings = np.sort(distPairings, axis = 0)
-        print("sorted", distPairings)
+        print("post- sort", distPairings)
         distPairings = distPairings[:,1]
-        print(distPairings)
+        print("Chopped for instance,",i, j, distPairings)
         y_col.append(majorityValue(distPairings[0:K]))
         distPairings = []
     Y = np.array(y_col)
-    #print(Y)
+    #print("Y", Y)
     #print(YC)
     match = 0
     #for i in range np.size(Y):
