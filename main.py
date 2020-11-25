@@ -54,10 +54,9 @@ def euclideanDistance(Instance1, Instance2):
     return ED
 
 def majorityValue(input):
-    print(input)
+    #print(input)
     Yvals = Counter(input).most_common(5)
     Yvals = np.array(Yvals)
-    print("this", Yvals)
     if Yvals[0][1] == 5:
         ismajority = Yvals[0][0]
         return ismajority
@@ -91,15 +90,22 @@ def main():
     for i in range(352): # maybe use rows and coloumns
         for j in range(TT):
             ED = euclideanDistance(X[:, i], D[:, j])
-            np.append(distPairings,([ED, D[:, j][6]]), axis = 0) # fill list with tuples of form [Distance, D(Y)]
-        distPairings.sort() # Sorts based of first value of each tuple (distances in ascending order)
+            distPairings.append([ED, D[:, j][6]]) # fill list with tuples of form [Distance, D(Y)]
+        #print("Pre-sort", distPairings)
+        #distPairings.sort(axis=0) # Sorts based of first value of each tuple (distances in ascending order)
         #cut distPAirings to length K
+        distPairings = np.array(distPairings)
+        print (np.shape(distPairings))
+        print(distPairings)
+        distPairings = np.sort(distPairings, axis = 0)
+        print("sorted", distPairings)
         distPairings = distPairings[:,1]
-    y_col.append(majorityValue(distPairings[0:K]))
-    distPairings = []
+        print(distPairings)
+        y_col.append(majorityValue(distPairings[0:K]))
+        distPairings = []
     Y = np.array(y_col)
-    print(Y)
-    print(YC)
+    #print(Y)
+    #print(YC)
     match = 0
     #for i in range np.size(Y):
         #if Y[i] == YC[i]
