@@ -1,9 +1,9 @@
-# Step 1 Import the data file
-import pandas as pd
-import numpy as np
-import math
-from collections import Counter
-import random
+
+import pandas as pd #To read in file
+import numpy as np #To use arrays that work well in python
+import math #To use sqrt()
+from collections import Counter #to count occurences of particular Y's in the KNN
+import random #To use random when there are ties
 
 filename = 'Data/Absenteeism_at_work.xls'
 data =  pd.read_excel(filename)
@@ -15,6 +15,7 @@ rows = 189
 cols = 7
 K = 5
 TT = 50 #TT is the Training threshhold which is the initial number of Instances to be loaded into the Training set
+
 def normalize_features(input):
 
     normalizedList = []
@@ -91,25 +92,21 @@ def main():
         for j in range(TT):
             ED = euclideanDistance(X[:, i], D[:, j])
             distPairings.append([ED, D[:, j][6]]) # fill list with tuples of form [Distance, D(Y)]
-        #print("Pre-sort", distPairings)
-        #distPairings.sort(axis=0) # Sorts based of first value of each tuple (distances in ascending order)
-        #cut distPAirings to length K
         distPairings = np.array(distPairings)
-        print("Pre-sort", distPairings)
-        distPairings = np.sort(distPairings, axis = 0)
-        print("post- sort", distPairings)
+        distPairings = distPairings[distPairings[:,0].argsort()]
+        #distPairings = np.sort(distPairings, axis = 1)
         distPairings = distPairings[:,1]
-        print("Chopped for instance,",i, j, distPairings)
         y_col.append(majorityValue(distPairings[0:K]))
         distPairings = []
     Y = np.array(y_col)
-    #print("Y", Y)
-    #print(YC)
+    print("Y", Y)
+    print("YCorrect", YC)
     match = 0
-    #for i in range np.size(Y):
-        #if Y[i] == YC[i]
-            #match = match + 1
-    print("Accuracy: ", match/(704-TT))
+    for i in range(np.size(Y)):
+        if Y[i] == YC[0][i]:
+            match = match + 1
+    print("Accuracy: ", match/(rows-TT))
+
 
 if __name__ == "__main__":
     main()
